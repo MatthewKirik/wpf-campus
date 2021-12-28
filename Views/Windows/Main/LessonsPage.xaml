@@ -1,0 +1,123 @@
+﻿<Page x:Class="Views.Windows.Main.LessonsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Views.Windows.Main" xmlns:converters="clr-namespace:Views.Windows.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="LessonsPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*" MaxHeight="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Frame  Grid.Row="0"
+                Source="SubjectSelectionPage.xaml"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="0.15*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <DataTemplate 
+                    xmlns:models="clr-namespace:ViewModels.Models;assembly=ViewModels"
+                    DataType="{x:Type models:NotifiedCellValue}">
+                    <TextBlock 
+                        Text="{Binding Value}" 
+                        FontSize="12pt"
+                        TextAlignment="Center"/>
+                </DataTemplate>
+                <!--<DataTemplate 
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    DataType="{x:Type sys:DateTime}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                            Text="{Binding StringFormat=dd-MM-yyyy}" 
+                            FontSize="12pt"
+                            TextAlignment="Center"/>
+                        <TextBlock Grid.Row="1"
+                            Text="{Binding StringFormat=HH:mm}" 
+                            FontSize="12pt"
+                            TextAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>-->
+            </Grid.Resources>
+            <DataGrid 
+                    Grid.Column="0" 
+                    Margin="10px"
+                    ItemsSource="{Binding Marks.Table}"
+                    AutoGenerateColumns="True"
+                    CanUserAddRows="False"
+                    Foreground="Black"
+                    AutoGeneratingColumn="DataGrid_AutoGeneratingColumn">
+                <DataGrid.Resources>
+                    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
+                        <Style.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="{StaticResource MahApps.Brushes.Accent}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <converters:DataRowViewConverter x:Key="drvc" />
+                    <DataTemplate x:Key="NotifiedCellTemplate">
+                        <TextBox 
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Converter={StaticResource drvc}}"
+                            Margin="5"
+                            HorizontalContentAlignment="Center"
+                            Foreground="Black"
+                            Text="{Binding Path=Value, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                    </DataTemplate>
+                    <DataTemplate x:Key="StringTemplate">
+                        <TextBlock
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Converter={StaticResource drvc}}"
+                            Margin="5"
+                            TextAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Foreground="Black"
+                            Text="{Binding Path=Value}"/>
+                    </DataTemplate>
+                    <DataTemplate x:Key="IntTemplate">
+                        <TextBlock
+                            DataContext="{Binding RelativeSource={RelativeSource AncestorType=DataGridCell}, Converter={StaticResource drvc}}"
+                            Margin="5"
+                            TextAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Foreground="{StaticResource MahApps.Brushes.Accent}"
+                            Text="{Binding Path=Value}"/>
+                    </DataTemplate>
+                </DataGrid.Resources>
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Text}" />
+                        <Setter Property="BorderBrush" Value="{x:Null}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource MahApps.Brushes.Text}" />
+                                <Setter Property="Background" Value="{x:Null}" />
+                                <Setter Property="BorderBrush" Value="{x:Null}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
+            <StackPanel Grid.Column="1"
+                Orientation="Horizontal">
+                <Button 
+                    Height="50" 
+                    Content="Додати урок" 
+                    IsEnabled="{Binding IsAnySubjectSelected}"
+                    Command="{Binding AddLessonCmd}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

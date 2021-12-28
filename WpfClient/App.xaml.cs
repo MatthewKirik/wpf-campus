@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using Views;
 
 namespace WpfClient
 {
@@ -13,5 +9,17 @@ namespace WpfClient
     /// </summary>
     public partial class App : Application
     {
+
+        public App()
+        {
+            ServiceConfigurator.ConfigureServices();
+        }
+
+
+        private void OnStartup(object sender, StartupEventArgs e)
+        {
+            var mainWindow = ServiceConfigurator.Provider.GetService<MainWindow>();
+            mainWindow.Show();
+        }
     }
 }
